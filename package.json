@@ -1,0 +1,16 @@
+{
+  "name": "lofidom",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.2",
+    "postcss": "^8.4.6",
+    "postcss-nested": "^5.0.6",
+    "postcss-simple-vars": "^6.0.3",
+    "vite": "^2.7.2"
+  }
+}

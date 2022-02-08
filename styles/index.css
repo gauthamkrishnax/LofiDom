@@ -1,0 +1,11 @@
+@import "./reset.css";
+/* @import "./variables.css"; */
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	overflow: hidden;
+}
