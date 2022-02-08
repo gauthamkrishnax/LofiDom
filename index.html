@@ -9,7 +9,24 @@
 </head>
 
 <body>
-  <div id="app"></div>
+  <header>
+    <div>
+      <h1>LOFIDOM</h1>
+    </div>
+    <nav id="Selector">
+      <button id="active" class="lofiGirl">#LofiGirl</button>
+      <button id="" class="wormono">#Wormono</button>
+      <button id="" class="yukoRecords">#YukoRecords</button>
+    </nav>
+  </header>
+  <main>
+    <div class="iframe-wrapper">
+      <div id="player"></div>
+    </div>
+  </main>
+  <div class="controls">
+    <progress id="progress" max="100" value="0">Progress</progress>
+  </div>
   <script type="module" src="./scripts/main.js"></script>
 </body>
 

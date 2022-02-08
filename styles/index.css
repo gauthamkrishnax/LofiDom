@@ -8,4 +8,75 @@
 html,
 body {
 	overflow: hidden;
+	background-color: #111111;
+	min-height: 100vh;
+	height: 100%;
+}
+main {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	.iframe-wrapper {
+		margin-bottom: 10em;
+		width: min-content;
+		padding: 1em;
+		background-color: black;
+		border-radius: 1em;
+	}
+	z-index: 0;
+}
+header {
+	position: relative;
+	z-index: 1;
+	color: white;
+	background-color: black;
+	div {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 0.5em;
+		font-size: 1.2rem;
+		letter-spacing: 3px;
+	}
+	nav {
+		margin-top: 1em;
+		width: 100%;
+		display: flex;
+		justify-content: space-around;
+		button {
+			width: 100%;
+			color: #222222;
+			background-color: #dddddd;
+			font-size: 1em;
+			padding-top: 0.5em;
+			padding-bottom: 0.5em;
+			cursor: pointer;
+		}
+		#active {
+			color: white;
+			background-color: green;
+		}
+	}
+}
+
+.controls {
+	background-color: black;
+	height: 2em;
+	width: 100%;
+	position: fixed;
+	bottom: 0;
+	progress {
+		width: 100%;
+	}
+	progress[value] {
+		appearance: none;
+		border: none;
+		color: green;
+	}
+
+	progress[value]::-webkit-progress-value {
+		background-image: linear-gradient(to right, #00ff00, #014f01);
+		transition: width 1s linear;
+	}
 }
