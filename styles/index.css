@@ -1,4 +1,5 @@
 @import "./reset.css";
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap");
 /* @import "./variables.css"; */
 
 * {
@@ -8,9 +9,10 @@
 html,
 body {
 	overflow: hidden;
-	background-color: #111111;
+	background-color: #eeeeee;
 	min-height: 100vh;
 	height: 100%;
+	font-family: "Playfair Display", serif;
 }
 main {
 	height: 100%;
@@ -23,6 +25,7 @@ main {
 		padding: 1em;
 		background-color: black;
 		border-radius: 1em;
+		box-shadow: 0px 16px 50px 12px rgba(0, 0, 0, 0.43);
 	}
 	z-index: 0;
 }
@@ -30,32 +33,42 @@ header {
 	position: relative;
 	z-index: 1;
 	color: white;
-	background-color: black;
 	div {
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		padding: 0.5em;
+		padding: 1em;
 		font-size: 1.2rem;
 		letter-spacing: 3px;
+		background-color: black;
+		box-shadow: 0px 12px 29px rgba(0, 0, 0, 0.25);
+		z-index: 2;
+		position: relative;
 	}
 	nav {
-		margin-top: 1em;
 		width: 100%;
 		display: flex;
 		justify-content: space-around;
+		/* opacity: 50%; */
 		button {
 			width: 100%;
-			color: #222222;
-			background-color: #dddddd;
+			color: #000000;
 			font-size: 1em;
-			padding-top: 0.5em;
-			padding-bottom: 0.5em;
+			padding-top: 1em;
+			padding-bottom: 1em;
 			cursor: pointer;
+			border: 1px solid white;
+			background-color: rgba(196, 196, 196, 0.7);
+			font-family: "Playfair Display", serif;
+			&:hover {
+				background-color: rgba(196, 196, 196, 1);
+			}
+			transition: all 0.2s ease-in-out;
 		}
 		#active {
 			color: white;
-			background-color: green;
+			background-color: black;
+			transition: all 0.5s ease-in-out;
 		}
 	}
 }
@@ -69,14 +82,56 @@ header {
 	progress {
 		width: 100%;
 	}
+	.control-btns {
+		display: flex;
+		justify-content: center;
+		align-items: flex-end;
+		position: absolute;
+		left: 50%;
+		transform: translate(-50%, 0);
+		top: -3.8em;
+		button {
+			background-color: #c4c4c4;
+			border: 1px solid #c4c4c4;
+			border-radius: 10em;
+			padding: 0.5em;
+			cursor: pointer;
+			&:hover {
+				background-color: #000000;
+				path {
+					fill: #ffffff;
+				}
+			}
+		}
+		button:disabled {
+			cursor: not-allowed;
+			path {
+				fill: #777777;
+			}
+		}
+		#playPause {
+			background-color: #ffffff;
+			border: 1px solid #ffffff;
+			/* padding: 1.5em; */
+			width: 6.2em;
+			height: 6.2em;
+			margin: 0 1.5em 0 1.5em;
+			transition: all 0.2s ease-in-out;
+			&:hover {
+				background-color: #000000;
+			}
+			box-shadow: 0px -2px 17px rgba(0, 0, 0, 0.52);
+		}
+	}
 	progress[value] {
 		appearance: none;
 		border: none;
-		color: green;
+		color: white;
 	}
 
 	progress[value]::-webkit-progress-value {
-		background-image: linear-gradient(to right, #00ff00, #014f01);
+		background: rgb(0, 0, 0);
+		background: linear-gradient(90deg, #000000 0%, #06ffa5 100%);
 		transition: width 1s linear;
 	}
 }
