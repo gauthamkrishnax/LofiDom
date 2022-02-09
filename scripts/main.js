@@ -1,26 +1,13 @@
 import "../styles/index.css";
 
+//Add Play/Pause button
+//playtime/totaltime
+// Revision
+// Three.js Scene
+
 //Selector Functionality
 const selector = document.getElementById("Selector");
 let currentActiveMusic = document.getElementById("active");
-
-selector.addEventListener("click", (event) => {
-	currentActiveMusic.removeAttribute("id");
-	switch (event.target.innerText) {
-		case "#LofiGirl":
-			currentActiveMusic = event.target;
-			event.target.setAttribute("id", "active");
-			break;
-		case "#Wormono":
-			currentActiveMusic = event.target;
-			event.target.setAttribute("id", "active");
-			break;
-		case "#YukoRecords":
-			currentActiveMusic = event.target;
-			event.target.setAttribute("id", "active");
-			break;
-	}
-});
 
 // 2. This code loads the IFrame Player API code asynchronously.
 var tag = document.createElement("script");
@@ -36,7 +23,7 @@ window.onYouTubeIframeAPIReady = () => {
 	player = new YT.Player("player", {
 		height: "200",
 		width: "350",
-		videoId: "DoFDbkziWSc",
+		videoId: "5qap5aO4i9A",
 		playerVars: {
 			playsinline: 1,
 			autoplay: 1,
@@ -56,11 +43,19 @@ window.onYouTubeIframeAPIReady = () => {
 };
 
 // 4. The API will call this function when the video player is ready.
-let duration = 0;
-const progress = document.getElementById("progress");
 
 function onPlayerReady(event) {
 	event.target.playVideo();
+}
+
+// 5. The API calls this function when the player's state changes.
+//    The function indicates that when playing a video (state=1),
+//    the player should play for six seconds and then stop.
+
+let duration = 0;
+const progress = document.getElementById("progress");
+
+function onPlayerStateChange(event) {
 	duration = player.getDuration();
 
 	// Change the parameters
@@ -70,17 +65,37 @@ function onPlayerReady(event) {
 	}, 1000);
 }
 
-// 5. The API calls this function when the player's state changes.
-//    The function indicates that when playing a video (state=1),
-//    the player should play for six seconds and then stop.
+//Music Genre Selector
 
-var done = false;
+selector.addEventListener("click", (event) => {
+	currentActiveMusic.removeAttribute("id");
+	switch (event.target.innerText) {
+		case "#LofiGirl":
+			currentActiveMusic = event.target;
+			event.target.setAttribute("id", "active");
+			player.loadVideoById({ videoId: "5qap5aO4i9A" });
+			break;
 
-function onPlayerStateChange(event) {
-	// console.log(event);
-	// console.log(player, player.getCurrentTime());
-}
+		case "#Wormono":
+			player.stopVideo();
+			player.setShuffle(true);
+			player.loadPlaylist({
+				list: "PLEGDepFXWNlXw9aNpu9Y8MWIKSrv9mS7v",
+				index: Math.round(Math.random() * 50),
+			});
+			currentActiveMusic = event.target;
+			event.target.setAttribute("id", "active");
+			break;
 
-function stopVideo() {
-	player.stopVideo();
-}
+		case "#YukoRecords":
+			player.stopVideo();
+			player.setShuffle(true);
+			player.loadPlaylist({
+				list: "PL_NWZpphCxB0y6s5COLLYZG9jdqjpjCBn",
+				index: Math.round(Math.random() * 162),
+			});
+			currentActiveMusic = event.target;
+			event.target.setAttribute("id", "active");
+			break;
+	}
+});
