@@ -1,5 +1,5 @@
 import "../styles/index.css";
-
+import "./webgl";
 /*
 
 I. Selector Functionality
@@ -24,6 +24,7 @@ if (!localStorageActiveMusicNumber) {
 } else {
 	selector.children[localStorageActiveMusicNumber].setAttribute("id", "active");
 	if (localStorageActiveMusicNumber == 1) activeMusic = "#Wormono";
+	else if (localStorageActiveMusicNumber == 0) activeMusic = "#LofiGirl";
 	else activeMusic = "#YukoRecords";
 }
 
@@ -58,6 +59,7 @@ window.onYouTubeIframeAPIReady = () => {
 		playerVars: {
 			playsinline: 1, //disable fullscreen for mobile
 			autoplay: 1,
+			loop: 1,
 			controls: 0,
 			showinfo: 0,
 			autohide: 0,
@@ -65,7 +67,7 @@ window.onYouTubeIframeAPIReady = () => {
 			fs: 0, //disable fullscreen button
 			iv_load_policy: 3, //disable annotation
 			modestbranding: 1, //hide youtube branding
-			rel: 0,
+			rel: 0, //related videos
 		},
 		events: {
 			onReady: onPlayerReady,
@@ -97,9 +99,9 @@ function onPlayerStateChange(event) {
 	setInterval(function () {
 		let time = player.getCurrentTime();
 		if (isFinite((time / duration) * 100)) {
-			document.title = `Lofi-Dom [ ${Math.round((time / duration) * 100)}% ]`;
+			document.title = `LofiDom [ ${Math.round((time / duration) * 100)}% ]`;
 			if (Math.round((time / duration) * 100) == 100)
-				document.title = `Lofi-Dom [ Live 🔴 ]`;
+				document.title = `LofiDom [ Live 🔴 ]`;
 			progress.value = (time / duration) * 100;
 		}
 	}, 1000);
@@ -147,7 +149,7 @@ function changePlayerVideo(activeMusic, event = null) {
 		case "#Wormono":
 			player.loadPlaylist({
 				list: "PLEGDepFXWNlXw9aNpu9Y8MWIKSrv9mS7v",
-				index: Math.round(Math.random() * 50), //Wormono Playlist number of tracks = 50
+				index: Math.round(Math.random() * 45), //Wormono Playlist number of tracks = 45
 			});
 			localStorage.setItem("active", 1);
 			break;
@@ -155,7 +157,7 @@ function changePlayerVideo(activeMusic, event = null) {
 		case "#YukoRecords":
 			player.loadPlaylist({
 				list: "PL_NWZpphCxB0y6s5COLLYZG9jdqjpjCBn",
-				index: Math.round(Math.random() * 162), //Yuko Records Playlist Number of tracks = 162
+				index: Math.round(Math.random() * 161), //Yuko Records Playlist Number of tracks = 161
 			});
 			localStorage.setItem("active", 2);
 			break;
