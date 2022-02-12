@@ -8,6 +8,9 @@ var stats = new Stats();
 stats.showPanel(0);
 document.body.appendChild(stats.dom);
 
+const textureLoader = new THREE.TextureLoader();
+const particleAlpha = textureLoader.load("./cros.png");
+
 //THREE.JS Scene
 const scene = new THREE.Scene();
 
@@ -26,12 +29,26 @@ scene.add(camera);
 // scene.add(axesHelper);
 
 //Particles
-// const particlesGeometry = new THREE.BufferGeometry;
-// const particlesCount = 5000;
+const particlesGeometry = new THREE.BufferGeometry();
+const particlesMaterial = new THREE.PointsMaterial({
+	size: 0.1,
+	// map: particleAlpha,
+	transparent: true,
+});
+const particlesCount = 3000;
 
-// const posArray = new Float32Array(particlesCount * 3)
+const posArray = new Float32Array(particlesCount * 3);
 
-// for(let i=0; i<particlesCount*3; i++)
+for (let i = 0; i < particlesCount * 3; i++) {
+	posArray[i] = (Math.random() - 0.5) * 50;
+}
+particlesGeometry.setAttribute(
+	"position",
+	new THREE.BufferAttribute(posArray, 3)
+);
+
+const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+scene.add(particles);
 
 //Sphere Mesh (Background)
 const geometry = new THREE.SphereGeometry(15, 32, 16);
@@ -82,18 +99,26 @@ document.getElementById("webglWrapper").appendChild(renderer.domElement);
 
 // Mouse-Move Event
 let cameraXvalue = 0;
+// let mouseX = 0;
+let mouseY = 0;
+
 document.addEventListener("mousemove", (event) => {
 	cameraXvalue = (event.clientX - 960) * (20 / 960);
-	camera.position.set(-1 * cameraXvalue, 0, 30);
-	if (model) camera.lookAt(model.position);
+	// mouseX = event.clientX;
+	mouseY = event.clientY;
 });
 
 //Tick Function
 var clock = new THREE.Clock();
 
 function renderScene() {
-	if (mixer) mixer.update(clock.getDelta());
 	stats.begin();
+	if (mixer) mixer.update(clock.getDelta());
+	camera.position.set(1 * cameraXvalue, 0, 30);
+	if (model) camera.lookAt(model.position);
+	if (mouseY > 0) {
+		particles.rotation.y = mouseY * clock.getElapsedTime() * 0.00008;
+	}
 	renderer.render(scene, camera);
 	stats.end();
 	requestAnimationFrame(renderScene);
