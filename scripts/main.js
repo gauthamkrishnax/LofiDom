@@ -1,5 +1,7 @@
 import "../styles/index.css";
 import "./webgl";
+import { animateModel } from "./webgl";
+
 /*
 
 I. Selector Functionality
@@ -174,6 +176,7 @@ const changePlayBtnIcon = () => {
 	let pState = player.getPlayerState();
 	//if player not paused or in cue or has started
 	if (pState != 2 && pState != -1 && pState != 5) {
+		animateModel(1);
 		//  TWO LEG SVG
 		playPause.innerHTML = `<svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
 									<path
@@ -184,6 +187,7 @@ const changePlayBtnIcon = () => {
 										fill="black" />
 								</svg>`;
 	} else {
+		animateModel(0);
 		// ARROW SVG
 		playPause.innerHTML = `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
 									<path

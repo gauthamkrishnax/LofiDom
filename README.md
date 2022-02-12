@@ -1,11 +1,19 @@
-#LofiDom
+# LofiDom
 
-##To-do
+## To-do
 
-1. particles
-2. MouseMovement
-3. Revision
-4. Pause/play - animation Link
-5. Html Css Animations
-6. Performance Check - BenchMark
+<!-- 1. particles -->
+
+<!-- 2. MouseMovement -->
+
+<!-- 3. Revision -->
+
+<!-- 4. Pause/play - animation Link -->
+
+4. Html Css Animations (Loading)
+
+5. Performance Check - BenchMark
+
+6. Custom Shader
+
 7. Revision

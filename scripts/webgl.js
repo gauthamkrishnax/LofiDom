@@ -8,8 +8,8 @@ var stats = new Stats();
 stats.showPanel(0);
 document.body.appendChild(stats.dom);
 
+//Texture Loader
 const textureLoader = new THREE.TextureLoader();
-const particleAlpha = textureLoader.load("./cros.png");
 
 //THREE.JS Scene
 const scene = new THREE.Scene();
@@ -24,21 +24,17 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0, 0, 30);
 scene.add(camera);
 
-//Axis Helper
-// const axesHelper = new THREE.AxesHelper(5);
-// scene.add(axesHelper);
-
 //Particles
+const particleAlpha = textureLoader.load("./starAlpha.png");
 const particlesGeometry = new THREE.BufferGeometry();
 const particlesMaterial = new THREE.PointsMaterial({
 	size: 0.1,
-	// map: particleAlpha,
+	map: particleAlpha,
 	transparent: true,
+	blending: THREE.AdditiveBlending,
 });
-const particlesCount = 3000;
-
+const particlesCount = 3000; //Number of Particles
 const posArray = new Float32Array(particlesCount * 3);
-
 for (let i = 0; i < particlesCount * 3; i++) {
 	posArray[i] = (Math.random() - 0.5) * 50;
 }
@@ -46,7 +42,6 @@ particlesGeometry.setAttribute(
 	"position",
 	new THREE.BufferAttribute(posArray, 3)
 );
-
 const particles = new THREE.Points(particlesGeometry, particlesMaterial);
 scene.add(particles);
 
@@ -62,18 +57,21 @@ sphere.position.set(0, 0, -50);
 scene.add(sphere);
 
 //GLTF LOADER AND MODEL
+const loader = new GLTFLoader();
+
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath("./draco/");
-
-let model = null;
-let mixer = null;
-const loader = new GLTFLoader();
 loader.setDRACOLoader(dracoLoader);
+
+let model = null,
+	mixer = null,
+	action = null;
+
 loader.load(
-	"./WhiteDracoCom.glb",
+	"./model.glb",
 	function (gltf) {
 		mixer = new THREE.AnimationMixer(gltf.scene);
-		const action = mixer.clipAction(gltf.animations[0]);
+		action = mixer.clipAction(gltf.animations[0]);
 		action.play();
 		gltf.scene.scale.set(14, 14, 14);
 		gltf.scene.position.set(0, 2, 0);
@@ -88,6 +86,12 @@ loader.load(
 	}
 );
 
+// Play and Pause model animation according to video play state.
+function animateModel(onOffNumber) {
+	if (onOffNumber === 0) action.paused = true;
+	else if (onOffNumber === 1) action.paused = false;
+}
+
 //THREE.JS Renderer
 const renderer = new THREE.WebGLRenderer();
 renderer.setClearColor(new THREE.Color(0x000000));
@@ -98,8 +102,8 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping;
 document.getElementById("webglWrapper").appendChild(renderer.domElement);
 
 // Mouse-Move Event
-let cameraXvalue = 0;
 // let mouseX = 0;
+let cameraXvalue = 0;
 let mouseY = 0;
 
 document.addEventListener("mousemove", (event) => {
@@ -123,6 +127,7 @@ function renderScene() {
 	stats.end();
 	requestAnimationFrame(renderScene);
 }
+renderScene();
 
 // Resize Event
 window.addEventListener("resize", onResize, false);
@@ -132,4 +137,4 @@ function onResize() {
 	renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-renderScene();
+export { animateModel };
