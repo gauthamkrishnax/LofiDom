@@ -106,11 +106,19 @@ document.getElementById("webglWrapper").appendChild(renderer.domElement);
 let cameraXvalue = 0;
 let mouseY = 0;
 
-document.addEventListener("mousemove", (event) => {
+var mouseMoveEvent = (event) => {
 	cameraXvalue = (event.clientX - 960) * (20 / 960);
 	// mouseX = event.clientX;
 	mouseY = event.clientY;
-});
+};
+
+document.addEventListener("mousemove", mouseMoveEvent);
+
+function handleOrientation(event) {
+	cameraXvalue = event.gamma * (20 / 90); // In degree in the range [-90,90)
+}
+
+window.addEventListener("deviceorientation", handleOrientation);
 
 //Tick Function
 var clock = new THREE.Clock();

@@ -10,7 +10,7 @@
 
 <!-- 4. Pause/play - animation Link -->
 
-3. Device orientation control
+<!-- 3. Device orientation control -->
 
 4. Html Css Animations (Loading)
 
