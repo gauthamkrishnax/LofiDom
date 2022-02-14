@@ -118,7 +118,7 @@ var clock = new THREE.Clock();
 function renderScene() {
 	stats.begin();
 	if (mixer) mixer.update(clock.getDelta());
-	camera.position.set(1 * cameraXvalue, 0, 30);
+	camera.position.set(-1 * cameraXvalue, 0, 30);
 	if (model) camera.lookAt(model.position);
 	if (mouseY > 0) {
 		particles.rotation.y = mouseY * clock.getElapsedTime() * 0.00008;

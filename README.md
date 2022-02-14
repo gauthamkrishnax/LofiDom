@@ -10,6 +10,8 @@
 
 <!-- 4. Pause/play - animation Link -->
 
+3. Device orientation control
+
 4. Html Css Animations (Loading)
 
 5. Performance Check - BenchMark
