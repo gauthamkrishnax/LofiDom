@@ -1,12 +1,6 @@
 import * as THREE from "three";
-import Stats from "stats.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
-
-//Stat Panel
-var stats = new Stats();
-stats.showPanel(0);
-document.body.appendChild(stats.dom);
 
 //Texture Loader
 const textureLoader = new THREE.TextureLoader();
@@ -25,7 +19,7 @@ camera.position.set(0, 0, 30);
 scene.add(camera);
 
 //Particles
-const particleAlpha = textureLoader.load("./starAlpha.png");
+const particleAlpha = textureLoader.load("./alphaNew.jpg");
 const particlesGeometry = new THREE.BufferGeometry();
 const particlesMaterial = new THREE.PointsMaterial({
 	size: 0.1,
@@ -47,16 +41,20 @@ scene.add(particles);
 
 //Sphere Mesh (Background)
 const geometry = new THREE.SphereGeometry(15, 32, 16);
-const material = new THREE.MeshBasicMaterial({
-	color: 0x222222,
-	wireframe: true,
-});
-const sphere = new THREE.Mesh(geometry, material);
+const sphereMap = textureLoader.load("./rectangle.jpg");
+const sphere = new THREE.Mesh(
+	geometry,
+	new THREE.MeshBasicMaterial({
+		map: sphereMap,
+		wireframe: true,
+	})
+);
 sphere.scale.set(10, 10, 10);
 sphere.position.set(0, 0, -50);
 scene.add(sphere);
 
 //GLTF LOADER AND MODEL
+const htmlLoadContainer = document.querySelector(".loading");
 const loader = new GLTFLoader();
 
 const dracoLoader = new DRACOLoader();
@@ -73,13 +71,42 @@ loader.load(
 		mixer = new THREE.AnimationMixer(gltf.scene);
 		action = mixer.clipAction(gltf.animations[0]);
 		action.play();
+		model = gltf.scene.children[0];
+
+		const count =
+			model.children[1].children[0].geometry.attributes.position.count;
+		const randoms = new Float32Array(count);
+
+		for (let i = 0; i < count; i++) {
+			randoms[i] = Math.random();
+		}
+
+		model.children[1].children[0].geometry.setAttribute(
+			"aRandom",
+			new THREE.BufferAttribute(randoms, 1)
+		);
+
+		console.log(model.children[1].children[0].geometry);
+
+		model.children[1].children[0].material = new THREE.MeshNormalMaterial({});
+
+		console.log(model.children[1].children[0].material);
 		gltf.scene.scale.set(14, 14, 14);
 		gltf.scene.position.set(0, 2, 0);
 		scene.add(gltf.scene);
-		model = gltf.scene.children[0];
+		// htmlLoadContainer.style.display = "none";
+		htmlLoadContainer.classList.add("ending");
+		setTimeout(() => {
+			htmlLoadContainer.style.display = "none";
+		}, 1000);
 	},
 	(xhr) => {
-		console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+		htmlLoadContainer.children[1].textContent = Math.round(
+			(xhr.loaded / xhr.total) * 100
+		);
+		htmlLoadContainer.children[0].style.clipPath = `polygon(0 0, 100% 0, 100% ${
+			(xhr.loaded / xhr.total) * 100
+		}%, 0 ${(xhr.loaded / xhr.total) * 100}%)`;
 	},
 	(error) => {
 		console.log(error);
@@ -94,7 +121,7 @@ function animateModel(onOffNumber) {
 
 //THREE.JS Renderer
 const renderer = new THREE.WebGLRenderer();
-renderer.setClearColor(new THREE.Color(0x000000));
+renderer.setClearColor(new THREE.Color(0x08070c));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.outputEncoding = THREE.sRGBEncoding;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -124,15 +151,11 @@ window.addEventListener("deviceorientation", handleOrientation);
 var clock = new THREE.Clock();
 
 function renderScene() {
-	stats.begin();
 	if (mixer) mixer.update(clock.getDelta());
 	camera.position.set(-1 * cameraXvalue, 0, 30);
 	if (model) camera.lookAt(model.position);
-	if (mouseY > 0) {
-		particles.rotation.y = mouseY * clock.getElapsedTime() * 0.00008;
-	}
+	particles.rotation.y = mouseY * clock.getElapsedTime() * 0.00003;
 	renderer.render(scene, camera);
-	stats.end();
 	requestAnimationFrame(renderScene);
 }
 renderScene();

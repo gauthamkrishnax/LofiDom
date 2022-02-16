@@ -16,6 +16,6 @@
 
 5. Performance Check - BenchMark
 
-6. Custom Shader
+<!-- 6. Custom Shader -->
 
 7. Revision

@@ -1,0 +1,11 @@
+.loading {
+	p {
+		color: white;
+		margin-top: 1em;
+		opacity: 0.5;
+	}
+}
+.loading.ending {
+	opacity: 0;
+	transition: 1s ease-in-out;
+}

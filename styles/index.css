@@ -1,7 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 @import "./reset.css";
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap");
-/* @import "./variables.css"; */
-
+@import "./loading.css";
 * {
 	box-sizing: border-box;
 }
@@ -12,7 +11,7 @@ body {
 	background-color: #000000;
 	min-height: 100vh;
 	height: 100%;
-	font-family: "Playfair Display", serif;
+	font-family: "Roboto", sans-serif;
 }
 main {
 	z-index: 1;
@@ -60,7 +59,10 @@ header {
 			cursor: pointer;
 			border: 1px solid white;
 			background-color: rgba(196, 196, 196, 0.7);
-			font-family: "Playfair Display", serif;
+			font-family: "Roboto", sans-serif;
+
+			letter-spacing: 1px;
+
 			&:hover {
 				background-color: rgba(196, 196, 196, 1);
 			}
@@ -132,8 +134,8 @@ header {
 	}
 
 	progress[value]::-webkit-progress-value {
-		background: rgb(0, 0, 0);
-		background: linear-gradient(90deg, #000000 0%, #ffffff 100%);
+		background: rgb(255, 255, 255);
+		background: linear-gradient(90deg, #8b47f1 0%, #75fa9e 100%);
 		transition: width 1s linear;
 	}
 }

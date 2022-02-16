@@ -6,9 +6,53 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lofi-Dom</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      font-family: sans-serif;
+    }
+
+    .loading {
+      position: fixed;
+      top: 0;
+      z-index: 10;
+      width: 100vw;
+      height: 100vh;
+      background-color: black;
+      display: flex;
+      flex-direction: column;
+      color: white;
+      justify-content: center;
+      align-items: center;
+      opacity: 1;
+    }
+
+    .loadingSvg {
+      clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+      transition: .5s ease-in;
+    }
+  </style>
 </head>
 
 <body>
+  <div class="loading">
+    <svg class="loadingSvg" width="222" height="235" viewBox="0 0 222 235" fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd"
+        d="M0.148804 176.25V58.75L111 0L221.851 58.75V176.25L111 235L0.148804 176.25ZM123.883 215.723L210.851 169.63V80.5047L123.883 215.723ZM203.817 61.6412L20.9219 160.327L113.756 13.91L203.817 61.6412ZM96.9291 19.9069L11.1488 155.199V65.3695L96.9291 19.9069ZM19.0673 173.827L107.579 220.737L200.829 75.7524L19.0673 173.827Z"
+        fill="url(#paint0_linear_41_14)" />
+      <defs>
+        <linearGradient id="paint0_linear_41_14" x1="111" y1="0" x2="111" y2="235" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#6DFC91" />
+          <stop offset="1" stop-color="#8048F2" />
+        </linearGradient>
+      </defs>
+    </svg>
+    <p>Hold on tight. Preparing Dom.</p>
+  </div>
   <header>
     <div>
       <h1>LOFIDOM</h1>
