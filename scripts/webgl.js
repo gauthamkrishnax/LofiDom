@@ -3,7 +3,32 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 
 //Texture Loader
-const textureLoader = new THREE.TextureLoader();
+const htmlLoadContainer = document.querySelector(".loading"); //Black Loading Screen
+const loadingManager = new THREE.LoadingManager(
+	// Loading Done
+	() => {
+		//To Not immediatly end loading when done.
+		setTimeout(() => {
+			htmlLoadContainer.classList.add("ending");
+		}, 100);
+		// Wait 1 sec to hide it (Fade out Animation duration)
+		setTimeout(() => {
+			htmlLoadContainer.style.display = "none";
+		}, 1000);
+	},
+	// Loading in progress
+	(itemsURL, itemsLoaded, itemsTotal) => {
+		htmlLoadContainer.children[1].textContent = Math.round(
+			(itemsLoaded / itemsTotal) * 100
+		);
+		htmlLoadContainer.children[0].children[0].style.clipPath = `polygon(0 0, 100% 0, 100% ${
+			(itemsLoaded / itemsTotal) * 100
+		}%, 0 ${(itemsLoaded / itemsTotal) * 100}%)`;
+	}
+);
+const textureLoader = new THREE.TextureLoader(loadingManager);
+const loader = new GLTFLoader(loadingManager);
+const dracoLoader = new DRACOLoader(loadingManager);
 
 //THREE.JS Scene
 const scene = new THREE.Scene();
@@ -19,7 +44,7 @@ camera.position.set(0, 0, 30);
 scene.add(camera);
 
 //Particles
-const particleAlpha = textureLoader.load("./alphaNew.jpg");
+const particleAlpha = textureLoader.load("./starAlpha.jpg");
 const particlesGeometry = new THREE.BufferGeometry();
 const particlesMaterial = new THREE.PointsMaterial({
 	size: 0.1,
@@ -41,7 +66,7 @@ scene.add(particles);
 
 //Sphere Mesh (Background)
 const geometry = new THREE.SphereGeometry(15, 32, 16);
-const sphereMap = textureLoader.load("./rectangle.jpg");
+const sphereMap = textureLoader.load("./gradient.jpg");
 const sphere = new THREE.Mesh(
 	geometry,
 	new THREE.MeshBasicMaterial({
@@ -54,110 +79,74 @@ sphere.position.set(0, 0, -50);
 scene.add(sphere);
 
 //GLTF LOADER AND MODEL
-const htmlLoadContainer = document.querySelector(".loading");
-const loader = new GLTFLoader();
-
-const dracoLoader = new DRACOLoader();
-dracoLoader.setDecoderPath("./draco/");
-loader.setDRACOLoader(dracoLoader);
+dracoLoader.setDecoderPath("./draco/"); //Web Assembly Code.
+loader.setDRACOLoader(dracoLoader); //Draco loader to GLTF loader
 
 let model = null,
 	mixer = null,
 	action = null;
 
-loader.load(
-	"./model.glb",
-	function (gltf) {
-		mixer = new THREE.AnimationMixer(gltf.scene);
-		action = mixer.clipAction(gltf.animations[0]);
-		action.play();
-		model = gltf.scene.children[0];
+loader.load("./model.glb", function (gltf) {
+	//Animation from GLTF model
+	mixer = new THREE.AnimationMixer(gltf.scene);
+	action = mixer.clipAction(gltf.animations[0]);
+	action.play();
 
-		const count =
-			model.children[1].children[0].geometry.attributes.position.count;
-		const randoms = new Float32Array(count);
+	model = gltf.scene.children[0];
+	model.children[1].children[0].material = new THREE.MeshNormalMaterial({});
 
-		for (let i = 0; i < count; i++) {
-			randoms[i] = Math.random();
-		}
-
-		model.children[1].children[0].geometry.setAttribute(
-			"aRandom",
-			new THREE.BufferAttribute(randoms, 1)
-		);
-
-		console.log(model.children[1].children[0].geometry);
-
-		model.children[1].children[0].material = new THREE.MeshNormalMaterial({});
-
-		console.log(model.children[1].children[0].material);
-		gltf.scene.scale.set(14, 14, 14);
-		gltf.scene.position.set(0, 2, 0);
-		scene.add(gltf.scene);
-		// htmlLoadContainer.style.display = "none";
-		htmlLoadContainer.classList.add("ending");
-		setTimeout(() => {
-			htmlLoadContainer.style.display = "none";
-		}, 1000);
-	},
-	(xhr) => {
-		htmlLoadContainer.children[1].textContent = Math.round(
-			(xhr.loaded / xhr.total) * 100
-		);
-		htmlLoadContainer.children[0].style.clipPath = `polygon(0 0, 100% 0, 100% ${
-			(xhr.loaded / xhr.total) * 100
-		}%, 0 ${(xhr.loaded / xhr.total) * 100}%)`;
-	},
-	(error) => {
-		console.log(error);
-	}
-);
-
-// Play and Pause model animation according to video play state.
-function animateModel(onOffNumber) {
-	if (onOffNumber === 0) action.paused = true;
-	else if (onOffNumber === 1) action.paused = false;
-}
+	gltf.scene.scale.set(14, 14, 14);
+	gltf.scene.position.set(0, 2, 0);
+	scene.add(gltf.scene);
+});
 
 //THREE.JS Renderer
 const renderer = new THREE.WebGLRenderer();
-renderer.setClearColor(new THREE.Color(0x08070c));
+renderer.setClearColor(new THREE.Color(0x08070c)); //Canvas Background Colour
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.outputEncoding = THREE.sRGBEncoding;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
 
+//Canvas Element
 document.getElementById("webglWrapper").appendChild(renderer.domElement);
 
 // Mouse-Move Event
 // let mouseX = 0;
-let cameraXvalue = 0;
+let cameraXvalue = 0; //Mouse to Three.js Camera position
 let mouseY = 0;
 
+//Track Mouse Movement
 var mouseMoveEvent = (event) => {
 	cameraXvalue = (event.clientX - 960) * (20 / 960);
 	// mouseX = event.clientX;
 	mouseY = event.clientY;
 };
 
-document.addEventListener("mousemove", mouseMoveEvent);
-
+// Track Orientation Movement
 function handleOrientation(event) {
 	cameraXvalue = event.gamma * (20 / 90); // In degree in the range [-90,90)
 }
 
+document.addEventListener("mousemove", mouseMoveEvent);
 window.addEventListener("deviceorientation", handleOrientation);
 
 //Tick Function
 var clock = new THREE.Clock();
 
 function renderScene() {
+	//Update Model Animation
 	if (mixer) mixer.update(clock.getDelta());
+
+	//Set Camera position and lookat model
 	camera.position.set(-1 * cameraXvalue, 0, 30);
 	if (model) camera.lookAt(model.position);
-	particles.rotation.y = mouseY * clock.getElapsedTime() * 0.00003;
+
+	//Rotate particles based on mouse Y
+	particles.rotation.y = mouseY * clock.getElapsedTime() * 0.00003; // Slow down animation
+
 	renderer.render(scene, camera);
 	requestAnimationFrame(renderScene);
 }
+
 renderScene();
 
 // Resize Event
@@ -166,6 +155,12 @@ function onResize() {
 	camera.aspect = window.innerWidth / window.innerHeight;
 	camera.updateProjectionMatrix();
 	renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+// Play and Pause model animation according to video play state.
+function animateModel(onOffNumber) {
+	if (onOffNumber === 0) action.paused = true;
+	else if (onOffNumber === 1) action.paused = false;
 }
 
 export { animateModel };
