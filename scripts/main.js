@@ -2,46 +2,10 @@ import "../styles/index.css";
 import "./webgl";
 import { animateModel } from "./webgl";
 
-/*
+let activeMusic = "#Wormono";
+let currentActiveMusic = "#Wormono";
 
-I. Selector Functionality
-
-*/
-
-//Selector Div Element
-const selector = document.getElementById("Selector");
-
-//LocalStorage previously played music number
-// 0 - #LofiGirl
-// 1 - #Wormono
-// 2 - #YukoRecords
-
-const localStorageActiveMusicNumber = localStorage.getItem("active");
-
-let activeMusic = "#LofiGirl";
-
-if (!localStorageActiveMusicNumber) {
-	selector.children[0].setAttribute("id", "active");
-	localStorage.setItem("active", 0);
-} else {
-	selector.children[localStorageActiveMusicNumber].setAttribute("id", "active");
-	if (localStorageActiveMusicNumber == 1) activeMusic = "#Wormono";
-	else if (localStorageActiveMusicNumber == 0) activeMusic = "#LofiGirl";
-	else activeMusic = "#YukoRecords";
-}
-
-let currentActiveMusic = document.getElementById("active");
-
-//Default Start Values
-// LocalStorageActiveMusicNumber = 0 (SAVED IN LOCALSTORAGE AS "active")
-// activeMusic = "#LofiMusic"
-// currentActiveMusic = Dom Element ( button - current Active )
-
-/*
-
-II. Load Youtube Player and Embedded API
-
-*/
+// II. Load Youtube Player and Embedded API
 
 // 1. This code loads the IFrame Player API code asynchronously.
 var tag = document.createElement("script");
@@ -101,9 +65,6 @@ function onPlayerStateChange(event) {
 	setInterval(function () {
 		let time = player.getCurrentTime();
 		if (isFinite((time / duration) * 100)) {
-			document.title = `LofiDom [ ${Math.round((time / duration) * 100)}% ]`;
-			if (Math.round((time / duration) * 100) == 100)
-				document.title = `LofiDom [ Live 🔴 ]`;
 			progress.value = (time / duration) * 100;
 		}
 	}, 1000);
@@ -121,53 +82,34 @@ const playPause = document.getElementById("playPause");
 const pTrack = document.getElementById("pTrack");
 const nTrack = document.getElementById("nTrack");
 
-//Disable next-track and pre-track for lofigirl
-if (currentActiveMusic.innerText == "#LofiGirl") {
-	pTrack.disabled = true;
-	nTrack.disabled = true;
-}
-
-//Music Genre Selector
-selector.addEventListener("click", (event) => {
-	currentActiveMusic.removeAttribute("id");
-	pTrack.disabled = false;
-	nTrack.disabled = false;
-	changePlayerVideo(event.target.innerText, event);
-});
-
 // Change the currently playing to active music
 
-function changePlayerVideo(activeMusic, event = null) {
+function changePlayerVideo(activeMusic) {
 	player.stopVideo();
 	player.setShuffle(true);
 	switch (activeMusic) {
-		case "#LofiGirl":
-			player.loadVideoById({ videoId: "5qap5aO4i9A" });
-			pTrack.disabled = true;
-			nTrack.disabled = true;
-			localStorage.setItem("active", 0);
-			break;
+		// case "#LofiGirl":
+		// 	player.loadVideoById({ videoId: "5qap5aO4i9A" });
+		// 	break;
 
 		case "#Wormono":
 			player.loadPlaylist({
 				list: "PLEGDepFXWNlXw9aNpu9Y8MWIKSrv9mS7v",
-				index: Math.round(Math.random() * 45), //Wormono Playlist number of tracks = 45
+				index: Math.round(Math.random() * 37), //Wormono Playlist number of tracks = 37
 			});
-			localStorage.setItem("active", 1);
+			pTrack.disabled = false;
+			nTrack.disabled = false;
 			break;
 
-		case "#YukoRecords":
-			player.loadPlaylist({
-				list: "PL_NWZpphCxB0y6s5COLLYZG9jdqjpjCBn",
-				index: Math.round(Math.random() * 161), //Yuko Records Playlist Number of tracks = 161
-			});
-			localStorage.setItem("active", 2);
-			break;
+		// case "#YukoRecords":
+		// 	player.loadPlaylist({
+		// 		list: "PL_NWZpphCxB0y6s5COLLYZG9jdqjpjCBn",
+		// 		index: Math.round(Math.random() * 161), //Yuko Records Playlist Number of tracks = 161
+		// 	});
+
+		// 	break;
 	}
-	if (event) {
-		currentActiveMusic = event.target;
-		event.target.setAttribute("id", "active");
-	}
+
 	playPause.focus();
 }
 
